@@ -24,6 +24,10 @@
 				:set position1 [:find $content "from "];			#Находит в этой строке позицию 'from '
 				:set position2 [:find $content " via "];			#Находит в этой строке позицию ' via '
 				:set badIP [:pick $content ($position1+5) $position2];	#Выделяет IP
+
+				:if ([:pick $badIP 0 $localIPend] = $localIP)	\		#Проверяет локальный ли этот IP
+				do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?"; }	\
+				else={ /ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout comment="by AutoBan script SSH and etc" };		#Иначе добавляет его в blacklist
 			}
 
 			#Bruteforce IPsec
@@ -32,11 +36,9 @@
 				:set position1 0;
 				:set position2 [:find $content " failed to get valid proposal"];			#Находит в этой строке позицию ' failed to get valid proposal'
 				:set badIP [:pick $content $position1 $position2];	#Выделяет IP
-			}
 
-			:if ([:pick $badIP 0 $localIPend] = $localIP)	\		#Проверяет локальный ли этот IP
-			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?"; }	\
-			else={ /ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout };		#Иначе добавляет его в blacklist
+				/ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout comment="by AutoBan script IPsec";
+			}
 
 		} on-error={ :log info "AutoBan Script has crashed"; :put "AutoBan Script has crashed" };		#Вывод информации в логи при ошибке
 	}
