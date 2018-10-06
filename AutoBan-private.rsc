@@ -24,8 +24,8 @@
 			:set position2 [:find $content " failed to get valid proposal" 0];			#Находит в этой строке позицию ' failed to get valid proposal'
 			:set badIP [:pick $content $position1 $position2];	#Выделяет IP
 
-			:if ([:pick $badIP 0 $localIPend] = $localIP)		#Проверяет локальный ли этот IP
-			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?" }
+			:if ([:pick $badIP 0 $localIPend] = $localIP)	\		#Проверяет локальный ли этот IP
+			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?"; }	\
 			else={ /ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout };		#Иначе добавляет его в blacklist
 
 		} on-error={ :log info "AutoBan Script has crashed"; :put "AutoBan Script has crashed" };		#Вывод информации в логи при ошибке
