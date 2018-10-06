@@ -28,7 +28,7 @@
 			$lIPb2 = "172.20." || $lIPb2 = "172.21." || $lIPb2 = "172.22." || $lIPb2 = "172.23." || \
 			$lIPb2 = "172.24." || $lIPb2 = "172.25." || $lIPb2 = "172.26." || $lIPb2 = "172.27." || \ 
 			$lIPb2 = "172.28." || $lIPb2 = "172.29." || $lIPb2 = "172.30." || $lIPb2 = "172.31.")	\
-			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?" }	\
+			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?"; }	\
 			else={ /ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout };		#Иначе добавляет его в blacklist
 
 		} on-error={ :log info "AutoBan Script has crashed"; :put "AutoBan Script has crashed" };		#Вывод информации в логи при ошибке
