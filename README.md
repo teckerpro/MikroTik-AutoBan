@@ -8,7 +8,7 @@ Create logging action
 /system logging action
 add memory-lines=60 name=YourAction target=memory
 /system logging
-add action=YourAction topics=error,critical
+add action=YourAction topics=error
 
 Create script
 
