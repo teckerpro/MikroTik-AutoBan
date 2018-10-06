@@ -4,20 +4,26 @@
 
 :foreach line in=[/log find buffer=$bufferName] do={
 	:do {
+			:local content [/log get $line message];				#Парсит всю строку из лога с ошибкой
+			:local position1 "";
+			:local position2 "";
+			:local badIP "";
+			
 			#Bruteforce SSH/Telnet/FTP/Web/Winbox etc.
-			:local content [/log get $line message];				#Парсит всю из лога с ошибкой
-			:local position1 [:find $content "from " 0];			#Находит в этой строке позицию 'from '
-			:local position2 [:find $content " via " 0];			#Находит в этой строке позицию ' via '
-			:local badIP [:pick $content ($position1+5) $position2];	#Выделяет IP
+			:if ([:find $content "login failure for user"] >= 0)	\	#Если :find находит, он возвращает >=0
+			do={
+				:set position1 [:find $content "from "];			#Находит в этой строке позицию 'from '
+				:set position2 [:find $content " via "];			#Находит в этой строке позицию ' via '
+				:set badIP [:pick $content ($position1+5) $position2];	#Выделяет IP
+			}
 
-			#Bruteforce IPsec key
-			:set position1 0;
-			:set position2 [:find $content " failed to get valid proposal" 0];			#Находит в этой строке позицию ' failed to get valid proposal'
-			:set badIP [:pick $content $position1 $position2];	#Выделяет IP
-
-			:if ([:pick $badIP 0 $localIPend] = $localIP)		#Проверяет локальный ли этот IP
-			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?" }
-			else={ /ip firewall address-list add list=$blacklistName address=$badIP timeout=$timeout };
+			#Bruteforce IPsec
+			:if ([:find $content "failed to get valid proposal"] >= 0)	\
+			do={
+				:set position1 0;
+				:set position2 [:find $content " failed to get valid proposal"];			#Находит в этой строке позицию ' failed to get valid proposal'
+				:set badIP [:pick $content $position1 $position2];	#Выделяет IP
+			}
 
 			:local lIPb1 [:pick $badIP 0 8];		#192.168.0.0-192.168.255.255
 			:local lIPb2 [:pick $badIP 0 7];		#172.16.0.0-172.31.255.255
