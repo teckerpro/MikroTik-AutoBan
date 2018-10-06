@@ -20,9 +20,9 @@
 			:local position3 [:find $badIP " " 0];		#Ищет в строке3 ' ' (пробел)
 			:set badIP1 [:pick $badIP 0 ($position3)];	#Удаляет этот пробел (8.8.8.8)
 
-			:local lIPb1 [:pick $badIP 0 8];		#192.168.0.0-192.168.255.255
-			:local lIPb2 [:pick $badIP 0 7];		#172.16.0.0-172.31.255.255
-			:local lIPb3 [:pick $badIP 0 3];		#10.0.0.0-10.255.255.255
+			:local lIPb1 [:pick $badIP1 0 8];		#192.168.0.0-192.168.255.255
+			:local lIPb2 [:pick $badIP1 0 7];		#172.16.0.0-172.31.255.255
+			:local lIPb3 [:pick $badIP1 0 3];		#10.0.0.0-10.255.255.255
 
 			:if ($lIPb1 = "192.168." || $lIPb3 = "10." || \ 
 			$lIPb2 = "172.16." || $lIPb2 = "172.17." || $lIPb2 = "172.18." || $lIPb2 = "172.19." || \ 

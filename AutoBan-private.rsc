@@ -29,7 +29,7 @@
 			:local position3 [:find $badIP " " 0];		#Ищет в строке3 ' ' (пробел)
 			:set badIP1 [:pick $badIP 0 ($position3)];	#Удаляет этот пробел (8.8.8.8)
 
-			:if ([:pick $badIP 0 $localIPend] = $localIP)		#Проверяет локальный ли этот IP
+			:if ([:pick $badIP1 0 $localIPend] = $localIP)		#Проверяет локальный ли этот IP
 			do={ :log info "Did you forgot your password\?"; :put "Did you forgot your password\?" }
 			else={ /ip firewall address-list add list=$blacklistName address=$badIP1 timeout=$timeout };		#Иначе добавляет его в blacklist
 
