@@ -40,6 +40,7 @@
 					:log warning "$prevBadIP is not you! It will be banned";
 					/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan ($content)";
 					:log warning "IP $badIP has been banned like a bitch!";
+					:set counter 0;
 					}
 
 				#check isLocal and isExistsInBlacklist
