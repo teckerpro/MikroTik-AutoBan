@@ -15,6 +15,8 @@
 			:local position1 "";
 			:local position2 "";
 			:local badIP "";
+			:local service "";
+
 
 			#Bruteforce SSH/Telnet/FTP/Web/Winbox
 			:if ([:find $content "login failure for user"] >= 0)\
@@ -22,11 +24,40 @@
 				:set position1 [:find $content "from "];
 				:set position2 [:find $content " via "];
 				:set badIP [:pick $content ($position1+5) $position2];
+				:set service [:pick $content ($position2+5) [:len $content]];
 
-				:if ( ([:pick $badIP 0 $localIPend] != $localIP)   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
-				do={ 
-					/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan SSH and etc";
-					:log warning "IP $badIP has been banned (SSH and etc)";
+				#check isLocal
+				:if ([:pick $badIP 0 $localIPend] != $localIP)\
+				do={
+					:if ( ($service = "ssh")   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					do={ 
+						/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan ssh";
+						:log warning "IP $badIP has been banned (ssh)";
+						}
+
+					:if ( ($service = "ftp")   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					do={ 
+						/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan ftp";
+						:log warning "IP $badIP has been banned (ftp)";
+						}
+
+					:if ( ($service = "telnet")   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					do={ 
+						/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan telnet";
+						:log warning "IP $badIP has been banned (telnet)";
+						}
+
+					:if ( ($service = "winbox")   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					do={ 
+						/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan winbox";
+						:log warning "IP $badIP has been banned (winbox)";
+						}
+
+					:if ( ($service = "web")   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					do={ 
+						/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan web";
+						:log warning "IP $badIP has been banned (web)";
+						}	
 					}
 			}
 
