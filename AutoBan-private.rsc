@@ -9,6 +9,8 @@
 #:local localIPend 7;
 #:local localIP "10.";			#10.0.0.0-10.255.255.255
 #:local localIPend 3;
+:local counter 0;
+:local prevBadIP "";
 
 :foreach line in=[/log find buffer=$bufferName] do={
 	:do {
@@ -18,8 +20,6 @@
 			:local badIP "";
 			:local service "";
 			:local user "";
-			:local counter 0;
-			:local prevBadIP "";
 
 			#Bruteforce SSH/Telnet/FTP/Web/Winbox
 			:if ([:find $content "login failure for user"] >= 0)\
@@ -32,10 +32,10 @@
 
 				:if ($userName = $user and $badIP = $prevBadIP and $counter < 4)\
 				do={
-					:log warning "$badIP is it you?";
+					:log warning "$user, $badIP is it you?";
 					:set counter ($counter+1);
 					}
-				:if ($counter >= 4)\
+				:if ($counter >= 3)\
 				do={
 					:log warning "$prevBadIP is not you! It will be banned";
 					/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan ($content)";
@@ -75,7 +75,7 @@
 						:log warning "IP $badIP has been banned (web)";
 						} else={ :log error "AutoBan Script coldn't check the service"; }
 					}
-					set: prevBadIP $badIP;
+					:set prevBadIP $badIP;
 				}
 
 			#Bruteforce IPsec
