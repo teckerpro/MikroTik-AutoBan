@@ -1,5 +1,5 @@
 :local bufferName "achtung";
-:local listName "blacklist";
+:local listName "Blacklist";
 :local timeout 180d;
 :local userName "alex";
 :local attempt 3; # Attempts for your userName
@@ -33,7 +33,7 @@
 				:set service [:pick $content ($position2+5) [:len $content]];
 				:set user [:pick $content 23 ($position1-1)];
 
-				#check #1: Is it local address and Is it you or not you?
+				#check #1: Is it local address & Is it you or not you?
 				:if ( ($localPrefix != $localIP)   and   ($userName = $user)   and   ($badIP = $prevBadIP)   and   ($counter <= $attempt)   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
 				do={
 					:log warning "$user, ip $badIP is it you? Attempt #$counter";
@@ -48,11 +48,11 @@
 					}
 				:if ($counter != 0 and $prevBadIP != $badIP)	do={ :set counter 0; }
 
-				#check #2: Is it local address and Is it exists in blacklist?
-				:if ( ($localPrefix != $localIP)   and   ($userName != $user)   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0))\
+				#check #2: Is it local address & Is it empty & and Is it exists in blacklist?
+				:if ( ($localPrefix != $localIP)   and   ($userName != $user   or   [:len $user] <= 0)   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0))\
 				do={
-					/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan $service";
-					:log warning "ip $badIP has been banned ($service)";
+					/ip firewall address-list add list=$listName address=$badIP timeout=$timeout comment="by AutoBan ($user via $service)";
+					:log warning "ip $badIP has been banned ($user via $service)";
 					}
 
 					:set prevBadIP $badIP; #for check #1
