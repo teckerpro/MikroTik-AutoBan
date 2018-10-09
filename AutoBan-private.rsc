@@ -14,6 +14,8 @@
 :local firstRunCheck true;
 :local attemptCounter 0;
 :local prevBadIP "";
+:local prevTime [:totime 00:00:00];
+:local currTime [:totime 00:00:00];
 
 :foreach line in=[/log find buffer=$bufferName] do={
 	:do {
@@ -34,11 +36,13 @@
 				:set localPrefix [:pick $badIP 0 $localIPend];
 				:set service [:pick $content ($position2+5) [:len $content]];
 				:set user [:pick $content 23 ($position1-1)];
+				:set currTime [:totime [/log get $line time]];
 
 				:if ($firstRunCheck)\
 				do={
 					:set firstRunCheck false;
 					:set prevBadIP $badIP;
+					:set prevTime $currTime;
 					}
 
 				#check #1: Is it local address & Is it you or not you? & Is it exists in blacklist? & Is it less than $timeBetweenAttempt?
@@ -46,7 +50,9 @@
 					($userName = $user) and\
 					($badIP = $prevBadIP) and\
 					($attemptCounter <= $attempt) and\
-					([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
+					([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) and\
+					($currTime >= $prevTime) and\
+					(($currTime - $prevTime) < $timeBetweenAttempt) )\
 				do={
 					:set attemptCounter ($attemptCounter+1);
 					:log warning "$user, ip $badIP is it you? Attempt #$attemptCounter";
@@ -70,6 +76,7 @@
 					}
 
 					:set prevBadIP $badIP; #for check #1
+					:set prevTime $currTime;
 				}
 
 			#Bruteforce IPsec
