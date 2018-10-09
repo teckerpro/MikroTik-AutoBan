@@ -41,7 +41,7 @@
 					:set prevBadIP $badIP;
 					}
 
-				#check #1: Is it local address & Is it you or not you? & Is it exists in blacklist? & Is it less than $timeBetweenAttempt?
+				#check #1: Is it local address & Is it you or not you? & Is it exists in blacklist?
 				:if ( ($localPrefix != $localIP) and\
 					($userName = $user) and\
 					($badIP = $prevBadIP) and\
