@@ -10,6 +10,7 @@
 #:local localIPend 7;
 #:local localIP "10.";			#10.0.0.0-10.255.255.255
 #:local localIPend 3;
+:local firstRunCheck true;
 :local counter 0;
 :local prevBadIP "";
 
@@ -33,11 +34,17 @@
 				:set service [:pick $content ($position2+5) [:len $content]];
 				:set user [:pick $content 23 ($position1-1)];
 
+				:if ($firstRunCheck)\
+				do={
+					:set firstRunCheck false;
+					:set prevBadIP $badIP;
+					}
+
 				#check #1: Is it local address & Is it you or not you?
 				:if ( ($localPrefix != $localIP)   and   ($userName = $user)   and   ($badIP = $prevBadIP)   and   ($counter <= $attempt)   and   ([:len [/ip firewall address-list find address=$badIP and list=$listName]] <= 0) )\
 				do={
-					:log warning "$user, ip $badIP is it you? Attempt #$counter";
 					:set counter ($counter+1);
+					:log warning "$user, ip $badIP is it you? Attempt #$counter";
 					}
 				:if ($counter >= $attempt)\
 				do={
