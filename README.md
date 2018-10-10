@@ -43,10 +43,10 @@ This script adds to the blacklist IPv4 addresses which:
 
 - attempt find password via SSH/Telnet/FTP/Web/Winbox
 		
-		login failure for user admin from IPv4.IPv4.IPv4.IPv4 via ssh
+		login failure for user admin from 192.0.2.0 via ssh
 
 - attempt find IPsec cipher/key
 
-		IPv4.IPv4.IPv4.IPv4 failed to get valid proposal.
-		IPv4.IPv4.IPv4.IPv4 failed to pre-process ph1 packet (side: 1, status 1).
-		IPv4.IPv4.IPv4.IPv4 phase1 negotiation failed.
+		192.0.2.0 failed to get valid proposal.
+		192.0.2.0 failed to pre-process ph1 packet (side: 1, status 1).
+		192.0.2.0 phase1 negotiation failed.
