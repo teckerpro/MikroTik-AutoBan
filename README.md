@@ -1,6 +1,16 @@
 # MikroTik-AutoBan
 This script parses log and add to blacklist IPv4 which caused error
 
+---
+## Attention!
+#### The script was split into 3 different scripts:
+* [MikroTik sshBan](https://github.com/teckerpro/MikroTik-sshBan)   *SSH/Telnet/FTP/Winbox/Web buteforce*
+* [MikroTik IpsecBan](https://github.com/teckerpro/MikroTik-IPsecBan)    *IPsec bruteforce*
+* [MikroTik pptpBan](https://github.com/teckerpro/MikroTik-pptpBan)    *PPTP bruteforce*
+#### Use them
+MikroTik AutoBan will not be developed
+
+---
 How to use
 
 Create logging action
